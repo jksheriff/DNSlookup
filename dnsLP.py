@@ -4,6 +4,6 @@ domain = input("enter domain: ")
 try:
   ip_address = socket.gethostbyname(domain)
   print(ip_address)
-except socket.gaierror:
-
-  print("Domain could not be resolved.")
+except socket.gaierror as e:
+    print("Error details:", e)
+    #catch error and print details
