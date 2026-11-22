@@ -142,7 +142,7 @@ scene.add(sun, sun.target);
   const tile = canvasTex(256, 256, (g) => { g.fillStyle = "#f7fbff"; g.fillRect(0, 0, 256, 256); g.fillStyle = "#8fc1ea"; g.fillRect(6, 6, 116, 116); g.fillRect(134, 6, 116, 116); g.fillRect(6, 134, 116, 116); g.fillRect(134, 134, 116, 116); g.fillStyle = "#9fcbef"; g.fillRect(14, 14, 40, 10); g.fillRect(142, 142, 40, 10); });
   tile.wrapS = tile.wrapT = THREE.RepeatWrapping; tile.repeat.set(48 / 0.5, 4 / 0.5);
   const dside = mat("#7fb2dc"), dtop = mat(0xffffff, tile);
-  const desk = mesh(new THREE.BoxGeometry(48, 0.3, 4), [dside, dside, dtop, dside, dside, dside], false, true);
+  const desk = mesh(new THREE.BoxGeometry(48, 0.3, 4), [dside, dside, dtop, dside, dside, dside], true, true);
   at(desk, 20, -0.15, 0); scene.add(desk);
   const woodTex = canvasTex(512, 64, (g) => { g.fillStyle = "#c98b54"; g.fillRect(0, 0, 512, 64); g.strokeStyle = "#b47a46"; g.lineWidth = 3; for (let i = 0; i < 9; i++) { g.beginPath(); g.moveTo(0, 8 + i * 6); g.bezierCurveTo(170, 4 + i * 7, 340, 12 + i * 5, 512, 6 + i * 7); g.stroke(); } });
   woodTex.wrapS = THREE.RepeatWrapping; woodTex.repeat.set(30, 1);
@@ -243,7 +243,7 @@ let ram, bigCoin;
     bigCoin.visible = u > 0; const sc = Math.max(0.001, outBack(u));
     bigCoin.scale.set(sc * 1.7, sc * 1.3, sc * 1.7);
     // pops out of the press, stands up to face the camera, glides forward
-    bigCoin.position.set(5.35 + v * 0.05, 0.2 + v * 0.42 + Math.sin(t * 2.4) * 0.02 * v, 0.05 + v * 0.95);
+    bigCoin.position.set(5.35 + v * 0.3, 0.2 + v * 0.42 + Math.sin(t * 2.4) * 0.02 * v, 0.05 + v * 0.95);
     bigCoin.rotation.set(v * Math.PI / 2, 0, Math.sin(t * 1.6) * 0.06 * v);
   });
 }
@@ -337,7 +337,7 @@ note("card", ["REUTERS", "analysis"], 0.46, 0.28, 5.92, 1.62, -0.78, C("3.reuter
   T.add(at(rbox(0.95, 0.06, 3.3, "#fbf7ee", 0.02), 0, 0.42, -0.15));
   T.add(at(rbox(1.0, 0.18, 3.35, "#e9e2d2", 0.02), 0, 0.34, -0.15));
   for (const [x, z] of [[-0.4, -1.7], [0.4, -1.7], [-0.4, 1.4], [0.4, 1.4]]) T.add(at(rbox(0.06, 0.4, 0.06, "#8b5a34", 0.01), x, 0.2, z));
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 9; i++) {
     const z = 1.3 - i * 0.31;
     for (const side of [-1, 1]) {
       const ch = group(at(rbox(0.2, 0.04, 0.2, "#c0392b", 0.01), 0, 0.24, 0), at(rbox(0.04, 0.3, 0.2, "#c0392b", 0.01), side * 0.1, 0.38, 0));
@@ -369,7 +369,7 @@ const clock = new THREE.Group(); at(clock, 12.0, 0.45, 1.12); clock.scale.setSca
   clock.rotation.y = 0.1;
   updaters.push((t) => { const a = t - C("4.clock"); clock.rotation.z = a > 0 && a < 1.0 ? Math.sin(a * 70) * 0.12 * (1 - a) : 0; clock.position.y = 0.45 + (a > 0 && a < 1 ? Math.abs(Math.sin(a * 35)) * 0.03 : 0); });
 }
-note("card", ["WHITE HOUSE:", "“personal time”"], 0.56, 0.32, 12.58, 0, 1.3, C("4.wh"), { ry: -0.2 });
+note("card", ["WHITE HOUSE:", "“personal time”"], 0.56, 0.32, 12.55, 0, 1.9, C("4.wh"), { ry: -0.15 });
 
 // ===== Station 5 · World Liberty on the pegboard shelf (x≈16) =====
 {
@@ -386,7 +386,7 @@ note("card", ["WHITE HOUSE:", "“personal time”"], 0.56, 0.32, 12.58, 0, 1.3,
   at(counter, 15.22, 3.09, -1.45); counter.rotation.y = 0.15; scene.add(counter);
   updaters.push((t) => {
     const u = outCubic(prog(t, C("5.counter") - 0.2, 1.3));
-    const s = `$${(1.4 * u).toFixed(1)}B${u >= 1 ? "+" : ""}`; if (s === last) return; last = s;
+    const s = u <= 0 ? "" : `$${(1.4 * u).toFixed(1)}B${u >= 1 ? "+" : ""}`; if (s === last) return; last = s;
     ctr.redraw((g, w, h) => { g.fillStyle = "#1b2630"; g.fillRect(0, 0, w, h); g.fillStyle = "#6ff0a7"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = '120px "Archivo Black"'; g.fillText(s, w / 2, 118); g.font = 'bold 44px "Courier Prime"'; g.fillText("TOKEN SALES", w / 2, 216); });
   });
   // 75 / 25 pie on the pegboard; the 75% wedge drops into the company box
@@ -420,11 +420,17 @@ const winTex = (bg, fg) => canvasTex(128, 256, (g) => { g.fillStyle = bg; g.fill
     const tw = mesh(new THREE.BoxGeometry(w, h, w), [e, e, e, e, f, e]); at(tw, 20 + dx, 0.24 + h / 2, -0.25 + (i % 2) * 0.18); scene.add(tw);
   });
   const spire = mesh(new THREE.ConeGeometry(0.06, 0.5, 12), mat("#dccaa0")); at(spire, 19.97, 2.09, -0.25); scene.add(spire);
-  for (const [dx, dz, s] of [[-0.5, 0.3, 0.3], [0.45, 0.32, 0.24]]) { const d = mesh(new THREE.SphereGeometry(s, 20, 12), mat("#e8c98f")); d.scale.y = 0.35; at(d, 20 + dx, 0.24, dz); scene.add(d); }
+  for (const [dx, dz, s] of [[-0.74, 0.28, 0.22], [0.5, 0.3, 0.24]]) { const d = mesh(new THREE.SphereGeometry(s, 20, 12), mat("#e8c98f")); d.scale.y = 0.35; at(d, 20 + dx, 0.24, dz); scene.add(d); }
   // Binance toy building
   const bw = mat("#eef0f3"), bf = mat(0xffffff, winTex("#eef0f3", "#7d8a98"));
   const bld = mesh(new THREE.BoxGeometry(0.95, 1.6, 0.85), [bw, bw, bw, bw, bf, bw]); at(bld, 24.7, 0.8, -0.45); scene.add(bld);
-  const roof = plate(noteTex("sign", Object.assign(["BINANCE"], { colors: ["#2e3a46", "#ffffff"] }), 1.05, 0.26), 1.05, 0.26, 0.05, 0x2e3a46); at(roof, 24.7, 1.73, -0.05); scene.add(roof);
+  const BNB_PATH = "M16.624 13.9202l2.7175 2.7154-7.353 7.353-7.353-7.352 2.7175-2.7164 4.6355 4.6595 4.6356-4.6595zm4.6366-4.6366L24 12l-2.7154 2.7164L18.5682 12l2.6924-2.7164zm-9.272.001l2.7163 2.6914-2.7164 2.7174v-.001L9.2721 12l2.7164-2.7154zm-9.2722-.001L5.4088 12l-2.6914 2.6924L0 12l2.7164-2.7164zM11.9885.0115l7.353 7.329-2.7174 2.7154-4.6356-4.6356-4.6355 4.6595-2.7174-2.7154 7.353-7.353z"; // Binance mark, Simple Icons (CC0)
+  const roofTex = canvasTex(840, 208, (g, w, h) => {
+    g.fillStyle = "#1e2329"; g.fillRect(0, 0, w, h);
+    g.save(); g.translate(40, 34); g.scale(140 / 24, 140 / 24); g.fillStyle = "#f0b90b"; g.fill(new Path2D(BNB_PATH)); g.restore();
+    g.fillStyle = "#f0b90b"; g.textAlign = "left"; g.textBaseline = "middle"; fitFont(g, "BINANCE", '"Archivo Black"', 120, w - 230); g.fillText("BINANCE", 205, h / 2 + 6);
+  });
+  const roof = plate(roofTex, 1.05, 0.26, 0.05, 0x1e2329); at(roof, 24.7, 1.73, -0.05); scene.add(roof);
   scene.add(at(rbox(0.32, 0.4, 0.04, "#7d8a98", 0.01), 24.7, 0.2, -0.01));
 }
 // toy truck carrying USD1
@@ -465,12 +471,12 @@ const doc = new THREE.Group(); scene.add(doc);
   updaters.push((t) => {
     const ts = C("6.scroll"), tc = C("6.cap");
     const u = outBack(prog(t, ts - 0.1, 0.55));
-    at(doc, lerp(26.9, 25.2, u), 0.02, 1.0); doc.rotation.set(-0.55, -0.12, 0);
+    at(doc, lerp(26.9, 25.05, u), 0.02, 1.0); doc.rotation.set(-0.55, -0.12, 0);
     const hit = smooth(prog(t, tc - 0.28, 0.22)) - smooth(prog(t, tc + 0.12, 0.35));
     const lift = 0.9 - hit * 0.78;
     // stamp descends along the document normal
     const n = new THREE.Vector3(0, Math.cos(0.55), Math.sin(0.55));
-    stamp.position.set(25.2 + 0.02, 0.02 + 0.36 * Math.cos(0.55) + n.y * lift, 1.0 - 0.36 * Math.sin(0.55) + n.z * lift);
+    stamp.position.set(25.05 + 0.02, 0.02 + 0.36 * Math.cos(0.55) + n.y * lift, 1.0 - 0.36 * Math.sin(0.55) + n.z * lift);
     stamp.rotation.set(-0.55 + Math.PI / 2 - Math.PI / 2, 0, 0); stamp.rotation.x = -0.55 + 0; stamp.visible = t > ts && t < tc + 1.6;
     const m = prog(t, tc - 0.05, 0.12); mark.visible = m > 0; mark.scale.setScalar(m > 0 ? lerp(1.4, 1, outCubic(m)) : 0.001);
   });
@@ -668,23 +674,106 @@ let receipt, receiptTex;
   });
 }
 
+// ---------- bobbleheads: labeled caricatures of the people named in the script ----------
+const BOBBLES = [];
+function bobblehead({ skin, skinDark, outfit, tie, name, look }) {
+  const root = new THREE.Group(), head = new THREE.Group();
+  // pedestal with nameplate
+  root.add(at(rbox(0.4, 0.1, 0.28, "#2e3a46", 0.03), 0, 0.05, 0));
+  const np = plate(noteTex("sign", Object.assign([name], { colors: ["#f6efe2", INK] }), 0.37, 0.075), 0.37, 0.075, 0.006, 0xf6efe2);
+  at(np, 0, 0.05, 0.143); root.add(np);
+  // body
+  const torso = mesh(new THREE.CapsuleGeometry(0.1, 0.12, 6, 18), mat(outfit)); torso.scale.set(1.12, 1, 0.82); at(torso, 0, 0.27, 0); root.add(torso);
+  for (const s of [-1, 1]) {
+    const arm = mesh(new THREE.CapsuleGeometry(0.034, 0.12, 4, 10), mat(outfit)); at(arm, s * 0.125, 0.27, 0.01); arm.rotation.z = s * 0.32; root.add(arm);
+    root.add(at(mesh(new THREE.SphereGeometry(0.038, 12, 10), mat(skin)), s * 0.155, 0.18, 0.02));
+  }
+  if (tie) {
+    const v = new THREE.Shape(); v.moveTo(-0.045, 0.06); v.lineTo(0.045, 0.06); v.lineTo(0, -0.05); v.lineTo(-0.045, 0.06);
+    const shirt = mesh(new THREE.ExtrudeGeometry(v, { depth: 0.01, bevelEnabled: false }), mat("#ffffff")); at(shirt, 0, 0.33, 0.078); root.add(shirt);
+    const ts = new THREE.Shape(); ts.moveTo(-0.014, 0.05); ts.lineTo(0.014, 0.05); ts.lineTo(0.022, -0.1); ts.lineTo(0, -0.125); ts.lineTo(-0.022, -0.1); ts.lineTo(-0.014, 0.05);
+    const tieM = mesh(new THREE.ExtrudeGeometry(ts, { depth: 0.012, bevelEnabled: false }), mat(tie)); at(tieM, 0, 0.33, 0.085); root.add(tieM);
+  }
+  root.add(at(cyl(0.026, 0.026, 0.07, "#6d7782", 10), 0, 0.44, 0)); // spring neck
+  at(head, 0, 0.45, 0); root.add(head);
+  // head + face (simple dot features; identity comes from hair, outfit and the nameplate)
+  head.add(at(mesh(new THREE.SphereGeometry(0.165, 32, 24), mat(skin)), 0, 0.15, 0));
+  for (const s of [-1, 1]) {
+    head.add(at(mesh(new THREE.SphereGeometry(0.03, 12, 10), mat("#ffffff")), s * 0.058, 0.175, 0.138));
+    head.add(at(mesh(new THREE.SphereGeometry(0.016, 10, 8), mat(INK)), s * 0.058, 0.176, 0.164));
+    const brow = rbox(0.06, 0.015, 0.02, look.brow, 0.006); at(brow, s * 0.06, 0.222, 0.148); brow.rotation.z = -s * (look.browTilt || 0); head.add(brow);
+    const ear = mesh(new THREE.SphereGeometry(0.035, 12, 10), mat(skin)); ear.scale.set(0.6, 1, 1); at(ear, s * 0.163, 0.15, 0); head.add(ear);
+  }
+  head.add(at(mesh(new THREE.SphereGeometry(0.028, 12, 10), mat(skinDark)), 0, 0.142, 0.166));
+  const mouth = look.pursed
+    ? mesh(new THREE.TorusGeometry(0.02, 0.009, 8, 16), mat("#a9483f"))
+    : mesh(new THREE.TorusGeometry(0.038, 0.008, 6, 16, Math.PI), mat("#a9483f"));
+  at(mouth, 0, look.pursed ? 0.088 : 0.1, 0.152); if (!look.pursed) mouth.rotation.z = Math.PI; head.add(mouth);
+  look.hair(head);
+  return { root, head };
+}
+const HAIR = {
+  swoop: (h) => { // voluminous golden swept-back hair
+    const c = "#f2cd6b";
+    const cap = mesh(new THREE.SphereGeometry(0.176, 28, 18, 0, 6.283, 0, 1.25), mat(c)); cap.rotation.x = -0.42; at(cap, 0, 0.155, -0.005); h.add(cap);
+    const sw = mesh(new THREE.SphereGeometry(0.1, 20, 14), mat(c)); sw.scale.set(1.8, 0.55, 1.1); sw.rotation.z = 0.12; at(sw, 0.012, 0.3, 0.06); h.add(sw);
+    for (const s of [-1, 1]) { const side = mesh(new THREE.SphereGeometry(0.06, 14, 10), mat(c)); side.scale.set(0.7, 1.1, 1.4); at(side, s * 0.15, 0.2, -0.04); h.add(side); }
+  },
+  short: (h) => { // short dark hair
+    const c = "#1d1d1f";
+    const cap = mesh(new THREE.SphereGeometry(0.171, 28, 18, 0, 6.283, 0, 1.05), mat(c)); cap.rotation.x = -0.3; at(cap, 0, 0.155, 0); h.add(cap);
+    const fr = mesh(new THREE.SphereGeometry(0.08, 16, 10), mat(c)); fr.scale.set(1.5, 0.35, 0.7); at(fr, 0, 0.285, 0.095); h.add(fr);
+  },
+  ghutra: (h) => { // white headdress with black agal
+    const cap = mesh(new THREE.SphereGeometry(0.186, 28, 18, 0, 6.283, 0, 1.45), mat("#f7f6f0")); cap.rotation.x = -0.45; at(cap, 0, 0.155, -0.01); h.add(cap);
+    const drape = mesh(new THREE.CylinderGeometry(0.175, 0.23, 0.26, 28, 1, true, Math.PI * 0.62, Math.PI * 1.76), mat("#f7f6f0", null, { side: THREE.DoubleSide, noOutline: true }));
+    at(drape, 0, 0.04, -0.015); h.add(drape);
+    const agal = mesh(new THREE.TorusGeometry(0.15, 0.016, 8, 32), mat("#1d1d1f")); agal.rotation.x = Math.PI / 2 - 0.42; at(agal, 0, 0.27, -0.035); h.add(agal);
+  },
+};
+const PEOPLE = {
+  trump: { skin: "#f4b98a", skinDark: "#e5a173", outfit: "#1f2a44", tie: "#d62828", name: "DONALD TRUMP", look: { hair: HAIR.swoop, brow: "#d9b45a", browTilt: 0.12, pursed: true } },
+  cz: { skin: "#ebc39e", skinDark: "#d9ab84", outfit: "#26282c", tie: null, name: "CZ · BINANCE FOUNDER", look: { hair: HAIR.short, brow: "#1d1d1f", browTilt: 0 } },
+  royal: { skin: "#d9a57a", skinDark: "#c48f64", outfit: "#f4f2ec", tie: null, name: "EMIRATI ROYAL", look: { hair: HAIR.ghutra, brow: "#2a2a2a", browTilt: 0 } },
+};
+function placeBobble(who, x, y, z, s, t0, ry = 0) {
+  const b = bobblehead(PEOPLE[who]); at(b.root, x, y, z); b.root.rotation.y = ry; scene.add(b.root);
+  const ph = rnd() * 6;
+  BOBBLES.push((t) => {
+    const u = prog(t, t0, 0.45); b.root.visible = u > 0;
+    b.root.scale.setScalar(u > 0 ? s * outBack(u) : 0.0001);
+    const dt = t - t0;
+    b.head.rotation.z = (dt > 0 ? 0.32 * Math.sin(9 * dt) * Math.exp(-2.0 * dt) : 0) + 0.05 * Math.sin(2.1 * t + ph);
+    b.head.rotation.x = (dt > 0 ? 0.18 * Math.sin(7 * dt + 1) * Math.exp(-2.4 * dt) : 0) + 0.04 * Math.sin(1.7 * t + ph);
+  });
+}
+placeBobble("trump", -0.12, 0, 1.08, 0.95, C("1.trump"));
+placeBobble("trump", 5.0, 0, 1.12, 0.9, C("2.trump"), 0.15);
+placeBobble("trump", 12.0, 0.45, -1.52, 1.25, C("4.trump"));
+placeBobble("trump", 24.62, 0, 1.4, 0.85, C("6.trump"), -0.2);
+placeBobble("cz", 25.72, 0, 0.3, 0.9, C("6.cz"), -0.3);
+placeBobble("royal", 19.78, 0.24, 0.2, 0.85, C("7.royal"), 0.05);
+placeBobble("trump", 33.85, 0, 0.55, 0.9, C("9.markets") - 0.1, -0.25);
+updaters.push((t) => BOBBLES.forEach((f) => f(t)));
+
 // ---------- camera path ----------
 const V = (a) => new THREE.Vector3(...a);
 const K = [
   { t: 0, d: 0, p: [0, 2.3, 5.2], q: [0, 0.5, 0] },
   { t: BT(1).end + 0.2, d: BT(1).end, p: [0, 2.35, 4.45], q: [0, 0.62, 0] },
   { t: BT(2).start + 0.9, d: 1.3, p: [4.55, 1.6, 4.5], q: [4.55, 0.78, 0] },
-  { t: C("2.press") + 0.55, d: 1.25, p: [5.6, 1.75, 4.75], q: [5.6, 0.88, 0] },
+  { t: C("2.press") + 0.55, d: 1.25, p: [5.45, 1.75, 4.85], q: [5.45, 0.88, 0] },
   { t: BT(3).start + 0.9, d: 1.3, p: [6.8, 2.1, 6.1], q: [6.8, 0.85, 0] },
   { t: BT(4).start + 1.0, d: 1.5, p: [12.35, 1.3, 5.0], q: [12.1, 0.38, 0] },
   { t: BT(5).start + 1.1, d: 1.6, p: [16, 3.8, 4.7], q: [16, 3.62, -1.5] },
   { t: BT(6).start + 1.0, d: 1.6, p: [20.3, 2.0, 5.5], q: [20.3, 0.82, 0] },
   { t: C("6.arrive") + 0.35, d: C("6.arrive") + 0.35 - C("6.truck"), p: [24.0, 2.0, 5.5], q: [24.0, 0.82, 0] },
-  { t: C("6.scroll") + 0.8, d: 1.0, p: [24.9, 1.85, 5.2], q: [24.9, 0.85, 0.35] },
+  { t: C("6.scroll") + 0.8, d: 1.0, p: [25.05, 1.85, 5.25], q: [25.05, 0.85, 0.35] },
   { t: BT(7).start + 1.0, d: 1.4, p: [20.0, 2.05, 5.95], q: [20.0, 0.8, 0.2] },
   { t: BT(8).start + 1.0, d: 1.5, p: [29, 2.45, 7.0], q: [29, 1.25, 0] },
   { t: C("8.pawns") + 0.3, d: 1.4, p: [29, -2.1, 9.6], q: [29, -4.35, 4.6] },
-  { t: BT(9).start + 1.2, d: 1.6, p: [33, 1.75, 6.5], q: [33, 1.0, 0] },
+  { t: BT(9).start + 0.3, d: 1.2, p: [30.4, 3.4, 8.2], q: [31.2, 0.5, 0] },
+  { t: BT(9).start + 1.6, d: 1.3, p: [33, 1.75, 6.5], q: [33, 1.0, 0] },
   { t: BT(10).start + 1.1, d: 1.5, p: [37.35, 1.95, 5.4], q: [37.35, 0.8, 0.25] },
   { t: C("10.receipt") + 2.3, d: 2.2, p: [35.8, 5.2, 13.5], q: [35.2, 1.6, 0] },
 ].map((k) => ({ ...k, p: V(k.p), q: V(k.q) }));
@@ -699,7 +788,7 @@ function placeCamera(t) {
     if (u < 1) break;
   }
   // gentle orbit during the defense beat
-  const ob = prog(t, BT(9).start + 1.2, BT(9).end - BT(9).start - 0.4);
+  const ob = prog(t, BT(9).start + 1.6, BT(9).end - BT(9).start - 0.8);
   if (ob > 0 && ob < 1) { const a = Math.sin(ob * Math.PI) * 0.2; const d = camP.clone().sub(camQ); d.applyAxisAngle(new THREE.Vector3(0, 1, 0), a); camP.copy(camQ).add(d); }
   camP.x += Math.sin(t * 0.47) * 0.035; camP.y += Math.sin(t * 0.31 + 1) * 0.025;
   camera.position.copy(camP); camera.lookAt(camQ);
@@ -714,6 +803,7 @@ const vign = document.createElement("canvas"); vign.width = W; vign.height = H;
 const RED = "#e63946", BLACK = "#141414";
 const CAPS = [["$2.3 billion", RED], ["$TRUMP coin", BLACK], ["-97%", RED], ["dinner for 220", BLACK], ["75% cut", RED], ["pardoned", RED], ["$500 million", BLACK], ["investors lost", BLACK], ["legal?", BLACK], ["lawyer up", RED]]
   .map(([text, color], i) => ({ text, color, t0: C(`${i + 1}.cap`), t1: i < 9 ? BT(i + 1).end + 0.3 : DURATION + 1 }));
+CAPS.forEach((c, i) => { if (CAPS[i + 1]) c.t1 = Math.min(c.t1, CAPS[i + 1].t0 - 0.22); }); // never overlap the next caption
 function drawCaption(t) {
   for (const c of CAPS) {
     if (t < c.t0 || t > c.t1 + 0.2) continue;

@@ -68,9 +68,19 @@ names the source on screen without breaking the 1–4 word caption rule.
 
 **Objects**
 
-- Labels are plain text only: no real logos, no brand typefaces, no faces or
-  likenesses.
-- People are shown as faceless gray pawn figures.
+- The investors are shown as faceless gray pawn figures.
+- **People (revised by request):** the people the narration names appear as
+  toon caricature bobbleheads with nameplates. Each one pops in on the word
+  that names them.
+  - **Donald Trump** appears at the hook, the coin launch, the head of the
+    dinner table, the pardon and "credits rising markets".
+  - **CZ** appears beside the Binance building.
+  - **The Emirati royal** is a generic, unnamed figure in Gulf dress labelled
+    "EMIRATI ROYAL", to match the narration.
+- **Logos:** the Binance building's roof sign uses the real Binance mark, taken
+  from Simple Icons (a CC0 vector; the mark itself is Binance's trademark).
+  World Liberty, MGX, Reuters and the WSJ keep plain name labels, because no
+  licensed logo files were available.
 
 ---
 
